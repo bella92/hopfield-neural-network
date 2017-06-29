@@ -10,13 +10,27 @@ namespace HopfieldNeuralNetwork
     {
         private const int ROWS_COUNT = 7;
         private const int COLS_COUNT = 5;
-        private const int NEURONS_COUNT = 4;
+        private const int NEURONS_COUNT = 35;
 
         private static int[,] weightMatrix = new int[NEURONS_COUNT, NEURONS_COUNT];
 
-        public static void GenerateDigits()
+        public static int[][] GenerateDigits()
         {
+            int[][] digits = new[]
+            {
+                GenerateZero(),
+                GenerateOne(),
+                GenerateTwo(),
+                GenerateThree(),
+                GenerateFour(),
+                GenerateFive(),
+                GenerateSix(),
+                GenerateSeven(),
+                GenerateEight(),
+                GenerateNine()
+            };
 
+            return digits;
         }
 
         public static int[] GenerateZero() {
@@ -148,27 +162,40 @@ namespace HopfieldNeuralNetwork
             };
         }
 
-        public static int[] RandomizeDigit(int[] matrix, int percent, int colsCount)
+        public static int[] RandomizeDigit(int[] matrix, int percent)
         {
-            int rowsCount = matrix.Length / colsCount;
+            int[] result = new int[matrix.Length];
+
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                result[i] = matrix[i];
+            }
+
             Random random = new Random();
-            
-            int bitsCount = (int)((percent / 100.0) * rowsCount * colsCount);
+            int bitsCount = (int)((percent / 100.0) * matrix.Length);
 
             for (int i = 0; i < bitsCount; i++)
             {
-                int randomIndex = random.Next(rowsCount * colsCount);
-                matrix[randomIndex] = -matrix[randomIndex];
+                int randomIndex = random.Next(result.Length);
+
+                result[randomIndex] = Math.Abs(matrix[randomIndex] - 1);
             }
 
-            return matrix;
+            return result;
         }
 
         public static void Print1D(int[] digit, int colsCount)
         {
             for (int i = 0; i < digit.Length; i++)
             {
-                Console.Write(digit[i] + " ");
+                string text = digit[i] + " ";
+
+                if (digit[i] == -1)//TODO: remove
+                {
+                    text = 0 + " ";
+                }
+
+                Console.Write(text.PadLeft(3));
 
                 if ((i + 1) % colsCount == 0)
                 {
@@ -185,7 +212,8 @@ namespace HopfieldNeuralNetwork
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    Console.Write(matrix[i, j] + " ");
+                    string text = matrix[i, j] + " ";
+                    Console.Write(text.PadLeft(3));
                 }
 
                 Console.WriteLine();
@@ -232,41 +260,6 @@ namespace HopfieldNeuralNetwork
             return result;
         }
 
-        public static int[] GetColumn(int[] matrix, int column, int colsCount)
-        {
-            int rowsCount = matrix.Length / colsCount;
-            int[] result = new int[rowsCount];
-
-            for (int i = 0; i < rowsCount; i++)
-            {
-                result[i] = matrix[(colsCount * i) + column];
-            }
-
-            return result;
-        }
-
-        public static int[] GetRow(int[] matrix, int row, int colsCount)
-        {
-            int[] result = new int[colsCount];
-
-            Array.Copy(matrix, row * colsCount, result, 0, colsCount);
-
-            return result;
-        }
-
-        //public static int[] Transpose(int[] matrix, int colsCount)
-        //{
-        //    int rowsCount = matrix.Length / colsCount;
-        //    int[] result = new int[matrix.Length];
-
-        //    for (int i = 0; i < colsCount; i++)
-        //    {
-        //        Array.Copy(GetColumn(matrix, i, colsCount), 0, result, i * rowsCount, rowsCount);
-        //    }
-
-        //    return result;
-        //}
-
         public static void Train(int[] pattern)
         {
             for (int i = 0; i < pattern.Length; i++)
@@ -283,33 +276,38 @@ namespace HopfieldNeuralNetwork
                     }
                 }
             }
-
-            Print2D(weightMatrix);
         }
 
-        public static int[] ClearDiagonal(int[] matrix, int colsCount)
+        public static int[] Run(int[] pattern)
         {
-            int rowsCount = matrix.Length / colsCount;
-            int[] result = new int[matrix.Length];
-
-            for (int rowIndex = 0; rowIndex < rowsCount; rowIndex++)
-            {
-                for (int colIndex = 0; colIndex < colsCount; colIndex++)
+            int[] neurons = new int[pattern.Length];
+            int k = 1;
+            int h = 0;
+            //while (k != 0)
+            //{
+                k = 0;
+                for (int i = 0; i < NEURONS_COUNT; i++)
                 {
-                    int index = (rowIndex * colsCount) + colIndex;
-
-                    if (rowIndex == colIndex)
+                    h = 0;
+                    for (int j = 0; j < NEURONS_COUNT; j++)
                     {
-                        result[index] = 0;
+                        h += weightMatrix[i, j] * pattern[j];
                     }
-                    else
+
+                    if (h < 0)
                     {
-                        result[index] = matrix[index];
+                        neurons[i] = 0;
+                        k++;
+                    }
+                    else if (h > 0)
+                    {
+                        neurons[i] = 1;
+                        k++;
                     }
                 }
-            }
+            //}
 
-            return result;
+            return neurons;//here?!
         }
     }
 }

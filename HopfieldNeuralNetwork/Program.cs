@@ -10,21 +10,20 @@ namespace HopfieldNeuralNetwork
     {
         static void Main(string[] args)
         {
-            //int[] five = Examples.GenerateFive();
-            //Examples.Print(five, 5);
+            int[][] digits = Examples.GenerateDigits();
 
-            //var transposedFive = Examples.Transpose(five, 5);
-            //Examples.Print(transposedFive, 7);
+            for (int i = 0; i < digits.Length - 1; i++)
+            {
+                int[] biPolarPattern = Examples.ToBiPolar(digits[i]);
+                Examples.Train(biPolarPattern);
+            }
 
-            //var m = Examples.Multiply(five, transposedFive, 5, 7);
-            //Examples.Print(m, 7);
+            int[] test = Examples.GenerateTwo();
+            int[] randomizedTest = Examples.RandomizeDigit(test, 10);
+            Examples.Print1D(randomizedTest, 5);
 
-            //var clearedFive = Examples.ClearDiagonal(m, 7);
-            //Examples.Print(clearedFive, 7);
-
-            int[] pattern = new int[] { 0, 1, 0, 1 };
-            var biPolarPattern = Examples.ToBiPolar(pattern);
-            Examples.Train(biPolarPattern);
+            int[] result = Examples.Run(randomizedTest);
+            Examples.Print1D(result, 5);
         }
     }
 }
