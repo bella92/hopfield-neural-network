@@ -178,7 +178,7 @@ namespace HopfieldNeuralNetwork
             {
                 int randomIndex = random.Next(result.Length);
 
-                result[randomIndex] = Math.Abs(matrix[randomIndex] - 1);
+                result[randomIndex] = -matrix[randomIndex];
             }
 
             return result;
@@ -296,7 +296,7 @@ namespace HopfieldNeuralNetwork
 
                     if (h < 0)
                     {
-                        neurons[i] = 0;
+                        neurons[i] = -1;
                         k++;
                     }
                     else if (h > 0)

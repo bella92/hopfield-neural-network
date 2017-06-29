@@ -19,11 +19,13 @@ namespace HopfieldNeuralNetwork
             }
 
             int[] test = Examples.GenerateTwo();
-            int[] randomizedTest = Examples.RandomizeDigit(test, 10);
-            Examples.Print1D(randomizedTest, 5);
+            int[] biPolarTest = Examples.ToBiPolar(test);
+            int[] randomizedBiPolarTestTest = Examples.RandomizeDigit(biPolarTest, 10);
+            Examples.Print1D(randomizedBiPolarTestTest, 5);
 
-            int[] result = Examples.Run(randomizedTest);
-            Examples.Print1D(result, 5);
+            int[] result = Examples.Run(randomizedBiPolarTestTest);
+            int[] binaryResult = Examples.ToBinary(result);
+            Examples.Print1D(binaryResult, 5);
         }
     }
 }
