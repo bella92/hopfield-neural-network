@@ -11,6 +11,7 @@ namespace HopfieldNeuralNetwork
         static void Main(string[] args)
         {
             int[] five = Examples.GenerateFive();
+            Examples.PrintDigit(five, 5);
             //int[] randomizedFive = Examples.RandomizeDigit(five, 10);
             //Examples.PrintDigit(randomizedFive);
 
@@ -20,8 +21,11 @@ namespace HopfieldNeuralNetwork
             //var baba = Examples.ToBinary(result);
             //Examples.PrintDigit(baba);
 
-            var transposedFive = Examples.Transpose(five);
-            Examples.PrintDigit(transposedFive);
+            var transposedFive = Examples.Transpose(five, 5);
+            Examples.PrintDigit(transposedFive, 7);
+
+            var m = Examples.Multiply(five, transposedFive, 5, 7);
+            Examples.PrintDigit(m, 7);
         }
     }
 }

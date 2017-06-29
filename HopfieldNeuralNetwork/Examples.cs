@@ -8,6 +8,9 @@ namespace HopfieldNeuralNetwork
 {
     public static class Examples
     {
+        private const int ROWS_COUNT = 7;
+        private const int COLS_COUNT = 5;
+
         public static void GenerateDigits()
         {
 
@@ -60,7 +63,8 @@ namespace HopfieldNeuralNetwork
                 0, 1, 1, 1, 0,
                 0, 0, 0, 1, 0,
                 0, 0, 0, 1, 0,
-                0, 1, 1, 1, 0 };
+                0, 1, 1, 1, 0
+            };
         }
 
         public static int[] GenerateFour()
@@ -72,7 +76,8 @@ namespace HopfieldNeuralNetwork
                 0, 1, 1, 1, 0,
                 0, 0, 0, 1, 0,
                 0, 0, 0, 1, 0,
-                0, 0, 0, 1, 0 };
+                0, 0, 0, 1, 0
+            };
         }
 
         public static int[] GenerateFive()
@@ -84,7 +89,8 @@ namespace HopfieldNeuralNetwork
                 0, 1, 1, 1, 0,
                 0, 0, 0, 1, 0,
                 0, 0, 0, 1, 0,
-                0, 1, 1, 1, 0 };
+                0, 1, 1, 1, 0
+            };
         }
 
         public static int[] GenerateSix()
@@ -96,7 +102,8 @@ namespace HopfieldNeuralNetwork
                 0, 1, 1, 1, 0,
                 0, 1, 0, 1, 0,
                 0, 1, 0, 1, 0,
-                0, 1, 1, 1, 0 };
+                0, 1, 1, 1, 0
+            };
         }
 
         public static int[] GenerateSeven()
@@ -121,7 +128,8 @@ namespace HopfieldNeuralNetwork
                 0, 1, 1, 1, 0,
                 0, 1, 0, 1, 0,
                 0, 1, 0, 1, 0,
-                0, 1, 1, 1, 0 };
+                0, 1, 1, 1, 0
+            };
         }
 
         public static int[] GenerateNine()
@@ -133,32 +141,33 @@ namespace HopfieldNeuralNetwork
                 0, 1, 1, 1, 0,
                 0, 0, 0, 1, 0,
                 0, 0, 0, 1, 0,
-                0, 1, 1, 1, 0 };
+                0, 1, 1, 1, 0
+            };
         }
 
-        public static int[] RandomizeDigit(int[] digit, int percent)
+        public static int[] RandomizeDigit(int[] matrix, int percent, int colsCount)
         {
+            int rowsCount = matrix.Length / colsCount;
             Random random = new Random();
             
-            int itrations = (int)((percent / 100.0) * 35);
+            int bitsCount = (int)((percent / 100.0) * rowsCount * colsCount);
 
-            for (int i = 0; i < itrations; i++)
+            for (int i = 0; i < bitsCount; i++)
             {
-                int bit = random.Next(2);
-                int randomIndex = random.Next(35);
-                digit[randomIndex] = bit;
+                int randomIndex = random.Next(rowsCount * colsCount);
+                matrix[randomIndex] = -matrix[randomIndex];
             }
 
-            return digit;
+            return matrix;
         }
 
-        public static void PrintDigit(int[] digit)
+        public static void PrintDigit(int[] digit, int colsCount)
         {
             for (int i = 0; i < digit.Length; i++)
             {
                 Console.Write(digit[i] + " ");
 
-                if ((i + 1) % 5 == 0)
+                if ((i + 1) % colsCount == 0)
                 {
                     Console.WriteLine();
                 }
@@ -203,15 +212,58 @@ namespace HopfieldNeuralNetwork
             return result;
         }
 
-        public static int[] Transpose(int[] input)
+        public static int[] GetColumn(int[] matrix, int column, int colsCount)
         {
-            int[] result = new int[input.Length];
+            int rowsCount = matrix.Length / colsCount;
+            int[] result = new int[rowsCount];
 
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < rowsCount; i++)
             {
-                for (int j = 0; j < 5; j++)
+                result[i] = matrix[(colsCount * i) + column];
+            }
+
+            return result;
+        }
+
+        public static int[] GetRow(int[] matrix, int row, int colsCount)
+        {
+            int[] result = new int[colsCount];
+
+            Array.Copy(matrix, row * colsCount, result, 0, colsCount);
+
+            return result;
+        }
+
+        public static int[] Transpose(int[] matrix, int colsCount)
+        {
+            int rowsCount = matrix.Length / colsCount;
+            int[] result = new int[matrix.Length];
+
+            for (int i = 0; i < colsCount; i++)
+            {
+                Array.Copy(GetColumn(matrix, i, colsCount), 0, result, i * rowsCount, rowsCount);
+            }
+
+            return result;
+        }
+
+        public static int[] Multiply(int[] matrix1, int[] matrix2, int m1ColsCount, int m2ColsCount)
+        {
+            int resultRowsCount = matrix1.Length / m1ColsCount;
+            int resultColsCount = m2ColsCount;
+            int[] result = new int[resultRowsCount * resultColsCount];
+
+            for (int rowIndex = 0; rowIndex < resultRowsCount; rowIndex++)
+            {
+                for (int colIndex = 0; colIndex < resultColsCount; colIndex++)
                 {
-                    result[(i * 7) + j] = input[(j * 5) + i];
+                    int[] row = GetRow(matrix1, rowIndex, 5);
+                    int[] col = GetColumn(matrix2, colIndex, 7);
+
+                    for (int i = 0; i < row.Length; i++)
+                    {
+                        result[(rowIndex * resultColsCount) + colIndex] += row[i] * col[i];
+                    }
                 }
             }
 
