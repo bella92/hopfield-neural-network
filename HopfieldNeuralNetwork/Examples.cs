@@ -10,6 +10,9 @@ namespace HopfieldNeuralNetwork
     {
         private const int ROWS_COUNT = 7;
         private const int COLS_COUNT = 5;
+        private const int NEURONS_COUNT = 4;
+
+        private static int[,] weightMatrix = new int[NEURONS_COUNT, NEURONS_COUNT];
 
         public static void GenerateDigits()
         {
@@ -161,7 +164,7 @@ namespace HopfieldNeuralNetwork
             return matrix;
         }
 
-        public static void PrintDigit(int[] digit, int colsCount)
+        public static void Print1D(int[] digit, int colsCount)
         {
             for (int i = 0; i < digit.Length; i++)
             {
@@ -172,6 +175,23 @@ namespace HopfieldNeuralNetwork
                     Console.WriteLine();
                 }
             }
+
+            Console.WriteLine();
+        }
+
+        public static void Print2D(int[,] matrix)
+        {
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    Console.Write(matrix[i, j] + " ");
+                }
+
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
         }
 
         public static int[] ToBiPolar(int[] input)
@@ -234,35 +254,57 @@ namespace HopfieldNeuralNetwork
             return result;
         }
 
-        public static int[] Transpose(int[] matrix, int colsCount)
+        //public static int[] Transpose(int[] matrix, int colsCount)
+        //{
+        //    int rowsCount = matrix.Length / colsCount;
+        //    int[] result = new int[matrix.Length];
+
+        //    for (int i = 0; i < colsCount; i++)
+        //    {
+        //        Array.Copy(GetColumn(matrix, i, colsCount), 0, result, i * rowsCount, rowsCount);
+        //    }
+
+        //    return result;
+        //}
+
+        public static void Train(int[] pattern)
+        {
+            for (int i = 0; i < pattern.Length; i++)
+            {
+                for (int j = 0; j < pattern.Length; j++)
+                {
+                    if (i == j)
+                    {
+                        weightMatrix[i, j] = 0;
+                    }
+                    else
+                    {
+                        weightMatrix[i, j] += (pattern[i] * pattern[j]);
+                    }
+                }
+            }
+
+            Print2D(weightMatrix);
+        }
+
+        public static int[] ClearDiagonal(int[] matrix, int colsCount)
         {
             int rowsCount = matrix.Length / colsCount;
             int[] result = new int[matrix.Length];
 
-            for (int i = 0; i < colsCount; i++)
+            for (int rowIndex = 0; rowIndex < rowsCount; rowIndex++)
             {
-                Array.Copy(GetColumn(matrix, i, colsCount), 0, result, i * rowsCount, rowsCount);
-            }
-
-            return result;
-        }
-
-        public static int[] Multiply(int[] matrix1, int[] matrix2, int m1ColsCount, int m2ColsCount)
-        {
-            int resultRowsCount = matrix1.Length / m1ColsCount;
-            int resultColsCount = m2ColsCount;
-            int[] result = new int[resultRowsCount * resultColsCount];
-
-            for (int rowIndex = 0; rowIndex < resultRowsCount; rowIndex++)
-            {
-                for (int colIndex = 0; colIndex < resultColsCount; colIndex++)
+                for (int colIndex = 0; colIndex < colsCount; colIndex++)
                 {
-                    int[] row = GetRow(matrix1, rowIndex, 5);
-                    int[] col = GetColumn(matrix2, colIndex, 7);
+                    int index = (rowIndex * colsCount) + colIndex;
 
-                    for (int i = 0; i < row.Length; i++)
+                    if (rowIndex == colIndex)
                     {
-                        result[(rowIndex * resultColsCount) + colIndex] += row[i] * col[i];
+                        result[index] = 0;
+                    }
+                    else
+                    {
+                        result[index] = matrix[index];
                     }
                 }
             }
