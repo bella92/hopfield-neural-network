@@ -10,7 +10,44 @@ namespace HopfieldNeuralNetwork
     {
         static void Main(string[] args)
         {
-            int[][] digits = Examples.GenerateDigits();
+            int[][] digits = new int[3][] {
+                new int[100] {
+                    0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+                    0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
+                    0, 1, 1, 1, 0, 0, 1, 1, 1, 0,
+                    0, 1, 1, 0, 0, 0, 0, 1, 1, 0,
+                    0, 1, 1, 0, 0, 0, 0, 1, 1, 0,
+                    0, 1, 1, 0, 0, 0, 0, 1, 1, 0,
+                    0, 1, 1, 0, 0, 0, 0, 1, 1, 0,
+                    0, 1, 1, 1, 0, 0, 1, 1, 1, 0,
+                    0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
+                    0, 0, 0, 1, 1, 1, 1, 0, 0, 0
+                },
+                new int[100] {
+                    0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 
+                    0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 
+                    0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 
+                    0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 
+                    0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 
+                    0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 
+                    0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 
+                    0, 0, 1, 1, 1, 1, 1, 1, 0, 0
+                },
+                new int[100] {
+                    0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 
+                    0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 
+                    0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 
+                    0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 1, 1, 0, 0, 0,
+                    0, 0, 0, 0, 0, 1, 1, 0, 0, 0,
+                    0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 
+                    0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 
+                    0, 0, 0, 1, 1, 1, 1, 1, 0, 0
+                }
+            };
 
             for (int i = 0; i < digits.Length; i++)
             {
@@ -18,14 +55,14 @@ namespace HopfieldNeuralNetwork
                 Examples.Train(biPolarPattern);
             }
 
-            int[] test = Examples.GenerateEight();
+            int[] test = digits[0];
             //int[] biPolarTest = Examples.ToBiPolar(test);
-            int[] randomizedTest = Examples.RandomizeDigit(test, 3);
-            Examples.Print1D(randomizedTest, 5);
+            int[] randomizedTest = Examples.RandomizeDigit(test, 30);
+            Examples.Print1D(randomizedTest, 10);
 
             int[] result = Examples.Run(randomizedTest);
             //int[] binaryResult = Examples.ToBinary(result);
-            Examples.Print1D(result, 5);
+            Examples.Print1D(result, 10);
 
             //int[] pattern = new int[] { 0, 1, 1, 0, 1 };
             //int[] biPolarPattern = Examples.ToBiPolar(pattern);

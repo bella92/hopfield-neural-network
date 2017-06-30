@@ -10,9 +10,9 @@ namespace HopfieldNeuralNetwork
     {
         static Random random = new Random();
 
-        private const int ROWS_COUNT = 7;
-        private const int COLS_COUNT = 5;
-        private const int NEURONS_COUNT = 35;
+        private const int ROWS_COUNT = 10;
+        private const int COLS_COUNT = 10;
+        private const int NEURONS_COUNT = 100;
 
         private static int[,] weightMatrix = new int[NEURONS_COUNT, NEURONS_COUNT];
 
@@ -197,11 +197,11 @@ namespace HopfieldNeuralNetwork
         {
             for (int i = 0; i < digit.Length; i++)
             {
-                string text = digit[i] + " ";
+                string text = " ";
 
-                if (digit[i] == -1)//TODO: remove
+                if (digit[i] == 1)
                 {
-                    text = 0 + " ";
+                    text = "*";
                 }
 
                 Console.Write(text.PadLeft(3));
