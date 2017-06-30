@@ -8,6 +8,8 @@ namespace HopfieldNeuralNetwork
 {
     public static class Examples
     {
+        static Random random = new Random();
+
         private const int ROWS_COUNT = 7;
         private const int COLS_COUNT = 5;
         private const int NEURONS_COUNT = 35;
@@ -178,7 +180,14 @@ namespace HopfieldNeuralNetwork
             {
                 int randomIndex = random.Next(result.Length);
 
-                result[randomIndex] = -matrix[randomIndex];
+                if (result[randomIndex] == 0)
+                {
+                    result[randomIndex] = 1;
+                }
+                else
+                {
+                    result[randomIndex] = 0;
+                }
             }
 
             return result;
@@ -276,38 +285,74 @@ namespace HopfieldNeuralNetwork
                     }
                 }
             }
+
+            //Print2D(weightMatrix);
         }
 
         public static int[] Run(int[] pattern)
         {
             int[] neurons = new int[pattern.Length];
+            for (int i = 0; i < pattern.Length; i++)
+            {
+                neurons[i] = pattern[i];
+            }
+
             int k = 1;
             int h = 0;
-            //while (k != 0)
-            //{
+            while (k != 0)
+            {
+                //var shuffledNeurons = Shuffle(NEURONS_COUNT);
+
                 k = 0;
                 for (int i = 0; i < NEURONS_COUNT; i++)
                 {
+                    //i = shuffledNeurons[i];
                     h = 0;
                     for (int j = 0; j < NEURONS_COUNT; j++)
                     {
-                        h += weightMatrix[i, j] * pattern[j];
+                        h += weightMatrix[j, i] * neurons[j];
                     }
 
-                    if (h < 0)
-                    {
-                        neurons[i] = -1;
-                        k++;
-                    }
-                    else if (h > 0)
+                    var old = neurons[i];
+
+                    if (h >= 0)
                     {
                         neurons[i] = 1;
+                    }
+                    else
+                    {
+                        neurons[i] = 0;
+                    }
+
+                    if (old != neurons[i])
+                    {
                         k++;
                     }
                 }
-            //}
+            }
 
             return neurons;//here?!
+        }
+
+        static int[] Shuffle(int n)
+        {
+            int[] result = new int[n];
+
+            for (int i = 0; i < n; i++)
+            {
+                result[i] = i;
+            }
+
+            for (int t = 0; t < n; t++)
+            {
+                int temp = result[t];
+                
+                int r = random.Next(t, n);
+                result[t] = result[r];
+                result[r] = temp;
+            }
+
+            return result;
         }
     }
 }
